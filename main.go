@@ -3,34 +3,64 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/go-sql-driver/mysql"
-	"log"
 )
 
 var db *sql.DB
 
-func main() {
-	// Capture connection properties.
-	cfg := mysql.Config{
-		//User:   os.Getenv("DBUSER"),
-		//Passwd: os.Getenv("DBPASS"),
-		User:   "root",
-		Passwd: "20230205.ken",
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "recordings",
-	}
+type Album struct {
+	ID     int64
+	Title  string
+	Artist string
+	Price  float32
+}
 
-	// Get a database handle.
-	var err error
-	db, err = sql.Open("mysql", cfg.FormatDSN())
+//func main() {
+//	// Capture connection properties.
+//	cfg := mysql.Config{
+//		//User:   os.Getenv("DBUSER"),
+//		//Passwd: os.Getenv("DBPASS"),
+//		User:   "root",
+//		Passwd: "20230205.ken",
+//		Net:    "tcp",
+//		Addr:   "127.0.0.1:3306",
+//		DBName: "recordings",
+//	}
+//
+//	// Get a database handle.
+//	var err error
+//	db, err = sql.Open("mysql", cfg.FormatDSN())
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	pingErr := db.Ping()
+//	if pingErr != nil {
+//		log.Fatal(pingErr)
+//	}
+//	fmt.Println("Connected!")
+//}
+
+// albumsByArtist queries for albums that have the specified artist name.
+func albumsByArtist(name string) ([]Album, error) {
+	// An albums slice to hold data from returned rows.
+	var albums []Album
+
+	rows, err := db.Query("SELECT * FROM album WHERE artist = ?", name)
 	if err != nil {
-		log.Fatal(err)
+		return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
 	}
+	defer rows.Close()
 
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var alb Album
+		if err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
+			return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
+		}
+		albums = append(albums, alb)
 	}
-	fmt.Println("Connected!")
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
+	}
+	return albums, nil
 }

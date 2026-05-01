@@ -32,7 +32,7 @@
 ## 2. Slice
 
 - 2.1~2.4: `done`
-  对应 `08_slice`
+  对应 `08_slice`、`31_slice_internals`
 - 底层扩容原理仍偏概念化: `partial`
 
 ## 3. Map

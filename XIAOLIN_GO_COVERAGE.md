@@ -38,7 +38,7 @@
 ## 3. Map
 
 - 3.1~3.11: `partial`
-  有 `09_map`，但缺底层实现、扩容、并发安全、删除与遍历等专题化示例
+  有 `09_map`、`23_map_advanced`、`32_map_internals`，但还缺扩容与 runtime 细节
 
 ## 4. Channel
 

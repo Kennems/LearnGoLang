@@ -1,0 +1,16 @@
+package main
+
+import (
+	// _ 表示导入lib1，但是不使用其中的接口
+	_ "Go_Study/05_init/lib1"
+	//. 表示不需要指定哪一个包，可以直接使用, 即可以直接使用方法名调用该包中的方法
+	//. "Demo/05_init/lib2"
+
+	// 以别名的方式
+	mylib "Go_Study/05_init/lib2"
+)
+
+func main() {
+	//lib1.Lib1Test()
+	mylib.Lib2Test()
+}

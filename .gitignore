@@ -1,0 +1,9 @@
+.gocache/
+*.exe
+cpuprofile
+memoryprofile
+*.db
+im_system/client
+im_system/server
+zinx_example/server
+examples/image/*.webp

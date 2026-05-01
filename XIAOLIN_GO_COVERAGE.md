@@ -26,8 +26,7 @@
 - 1.15~1.17 interface 比较 / nil / 传参: `done`
 - 1.18 逃逸分析: `todo`
 - 1.19 多返回值实现: `done`
-- 1.20 `_` 用法: `partial`
-  `05_init` 里有匿名导入，但还没独立展开成专题
+- 1.20 `_` 用法: `done`
 - 1.21~1.22 unsafe.Pointer / uintptr: `todo`
 
 ## 2. Slice

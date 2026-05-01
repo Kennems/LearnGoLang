@@ -49,8 +49,8 @@
 ## 5. Sync
 
 - 5.1~5.13: `partial`
-  当前已有 `16_sync_advanced`、`goroutine_mutex`、`goroutine_workers`、`34_sync_mutex_rwmutex`、`35_sync_once_waitgroup_cond`
-  但还缺 sync.Map、Mutex 模式展开与 sync.Pool
+  当前已有 `16_sync_advanced`、`goroutine_mutex`、`goroutine_workers`、`34_sync_mutex_rwmutex`、`35_sync_once_waitgroup_cond`、`36_sync_map_atomic_pool`
+  但还缺 Mutex 模式展开与更完整的 sync.Map 内部拆解
 
 ## 6. Context
 

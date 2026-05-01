@@ -43,8 +43,8 @@
 ## 4. Channel
 
 - 4.1~4.11: `partial`
-  当前已有 `12_goroutine`、`channel`、`goroutine_channel`、`15_select_channel_patterns`
-  但缺关闭语义、阻塞过程、select 机制、内存泄漏等系统化整理
+  当前已有 `12_goroutine`、`channel`、`goroutine_channel`、`15_select_channel_patterns`、`24_channel_advanced`、`33_channel_internals`
+  但还缺 runtime 细节、关闭队列、泄漏场景与 select 机制展开
 
 ## 5. Sync
 

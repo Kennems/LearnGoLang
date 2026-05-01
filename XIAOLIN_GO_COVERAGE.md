@@ -49,8 +49,8 @@
 ## 5. Sync
 
 - 5.1~5.13: `partial`
-  当前已有 `16_sync_advanced`、`goroutine_mutex`、`goroutine_workers`
-  但缺 WaitGroup 原理、sync.Map、Mutex 模式、原子操作与锁对比
+  当前已有 `16_sync_advanced`、`goroutine_mutex`、`goroutine_workers`、`34_sync_mutex_rwmutex`
+  但还缺 WaitGroup 原理、sync.Map、Mutex 模式展开与 sync.Pool
 
 ## 6. Context
 

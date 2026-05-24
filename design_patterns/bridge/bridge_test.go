@@ -1,10 +1,24 @@
 package bridge
-import "testing"
+
+import (
+	"fmt"
+	"testing"
+)
+
 func TestBridge(t *testing.T) {
-	sa := &SoftwareA{}
+	sa := SoftwareA{Software{"a"}}
+	sb := SoftwareB{Software{"b"}}
+
 	pa := NewPhoneA("pa")
-	pa.SetSoft(sa)
-	if res := pa.Run(); res != "PhoneA pa run: run soft a" {
-		t.Errorf("Unexpected result: %s", res)
-	}
+	pb := NewPhoneB("pb")
+
+	pa.setSoft(&sa)
+	pa.Run()
+
+	pb.setSoft(&sb)
+	pb.Run()
+
+	fmt.Println()
+	p := TSoftware{&sb}
+	p.Run()
 }

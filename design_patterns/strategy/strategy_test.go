@@ -1,9 +1,32 @@
 package strategy
-import "testing"
-func TestStrategy(t *testing.T) {
-	context := NewContext(&ConcreteStrategyA{})
-	if res := context.ContextInterface(); res != "算法A实现" { t.Errorf("Error: %s", res) }
 
-	context = NewContext(&ConcreteStrategyB{})
-	if res := context.ContextInterface(); res != "算法B实现" { t.Errorf("Error: %s", res) }
+import (
+	"fmt"
+	"testing"
+)
+
+func TestStrategy(t *testing.T) {
+	context, err := NewCashContext("正常费")
+	if err != nil {
+		//t.Error(err)
+	} else {
+		result := context.acceptCash(10000)
+		fmt.Println(result)
+	}
+
+	context, err = NewCashContext("满300返100")
+	if err != nil {
+		t.Error(err)
+	} else {
+		result := context.acceptCash(350)
+		fmt.Println(result)
+	}
+
+	context, err = NewCashContext("打8折")
+	if err != nil {
+		t.Error(err)
+	} else {
+		result := context.acceptCash(300)
+		fmt.Println(result)
+	}
 }

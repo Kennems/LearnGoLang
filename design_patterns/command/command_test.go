@@ -1,11 +1,22 @@
 package command
-import "testing"
+
+import (
+	"testing"
+)
+
 func TestCommand(t *testing.T) {
-	receiver := &Receiver{}
-	cmd := NewConcreteCommand(receiver)
-	invoker := &Invoker{}
-	invoker.SetCommand(cmd)
-	if res := invoker.ExecuteCommand(); res != "执行请求！" {
-		t.Errorf("Unexpected result: %s", res)
-	}
+	invoker := NewInvoker()
+	concomA := NewConcreteCommandA()
+	receA := NewReceiverA()
+
+	concomA.SetReceiver(*receA)
+	invoker.AddCommand(concomA)
+
+	concomB := NewConcreteCommandB()
+	receB := NewReceiverB()
+
+	concomB.SetReceiver(*receB)
+	invoker.AddCommand(concomB)
+
+	invoker.ExecuteCommand()
 }

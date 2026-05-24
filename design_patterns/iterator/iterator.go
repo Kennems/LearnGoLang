@@ -1,49 +1,63 @@
+/*
+  Iterator 迭代器模式：
+        提供一种方法顺序访问一个聚合对象中的各个元素，而又不暴露该对象的内部表示
+ 个人想法：
+ 日期：   20170310
+*/
 package iterator
 
+//"fmt"
+
+type Book struct {
+	name string
+}
+
 type Iterator interface {
-	First() interface{}
-	Next() interface{}
-	IsDone() bool
-	CurrentItem() interface{}
+	first() interface{}
+	next() interface{}
 }
 
-type Aggregate interface {
-	CreateIterator() Iterator
+type BookGroup struct {
+	books []Book
 }
 
-type ConcreteAggregate struct {
-	items []interface{}
-}
-func NewConcreteAggregate() *ConcreteAggregate {
-	return &ConcreteAggregate{items: make([]interface{}, 0)}
-}
-func (c *ConcreteAggregate) CreateIterator() Iterator {
-	return NewConcreteIterator(c)
-}
-func (c *ConcreteAggregate) Count() int { return len(c.items) }
-func (c *ConcreteAggregate) Get(index int) interface{} { return c.items[index] }
-func (c *ConcreteAggregate) Set(index int, value interface{}) {
-	if index >= len(c.items) {
-		c.items = append(c.items, value)
-	} else {
-		c.items[index] = value
+func (b *BookGroup) add(newb Book) {
+	if b == nil {
+		return
 	}
+	b.books = append(b.books, newb)
 }
 
-type ConcreteIterator struct {
-	aggregate *ConcreteAggregate
-	current   int
+func (b *BookGroup) createIterator() *BookIterator {
+	if b == nil {
+		return nil
+	}
+	return &BookIterator{b, 0}
 }
-func NewConcreteIterator(aggregate *ConcreteAggregate) *ConcreteIterator {
-	return &ConcreteIterator{aggregate: aggregate, current: 0}
+
+type BookIterator struct {
+	g     *BookGroup
+	index int
 }
-func (c *ConcreteIterator) First() interface{} { return c.aggregate.Get(0) }
-func (c *ConcreteIterator) Next() interface{} {
-	c.current++
-	if c.current < c.aggregate.Count() {
-		return c.aggregate.Get(c.current)
+
+func (b *BookIterator) first() interface{} {
+	if b == nil {
+		return nil
+	}
+	if len(b.g.books) > 0 {
+		b.index = 0
+		return b.g.books[b.index]
 	}
 	return nil
 }
-func (c *ConcreteIterator) IsDone() bool { return c.current >= c.aggregate.Count() }
-func (c *ConcreteIterator) CurrentItem() interface{} { return c.aggregate.Get(c.current) }
+
+func (b *BookIterator) next() interface{} {
+	if b == nil {
+		return nil
+	}
+	if len(b.g.books) > b.index+1 {
+		b.index++
+		return b.g.books[b.index]
+	}
+	return nil
+}

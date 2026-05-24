@@ -7,16 +7,23 @@ func TestBuilder(t *testing.T) {
 		name     string
 		builder  Builder
 		expected interface{}
+		getRes   func() interface{}
 	}{
 		{
 			name:     "Builder1",
 			builder:  &Builder1{},
 			expected: "123",
+			getRes: func() interface{} {
+				return (&Builder1{}).GetResult()
+			},
 		},
 		{
 			name:     "Builder2",
 			builder:  &Builder2{},
 			expected: 6,
+			getRes: func() interface{} {
+				return (&Builder2{}).GetResult()
+			},
 		},
 	}
 

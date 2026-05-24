@@ -1,35 +1,107 @@
+/*
+ Mediator 中介者模式：
+        用一个中介对象来封装一系列的对象交互。
+        中介这使各对象不需要显式地相互引用，从而使其耦合松散，
+        而且可以独立地改变它们之间的交互。
+ 个人想法：每个对象都有一个中介者对象，发生变化时，通知中介者，由中介者判断通知其他的对象。
+*/
+
 package mediator
 
-type Mediator interface {
-	Send(message string, colleague Colleague) string
+import (
+	"fmt"
+)
+
+// 中介者接口
+type IMediator interface {
+	Send(string, IColleague)
 }
 
-type Colleague interface {
-	Send(message string) string
-	Notify(message string) string
+// 实现中介者接口的基本类型
+type Mediator struct {
 }
 
+// 具体的中介者
 type ConcreteMediator struct {
-	Colleague1 Colleague
-	Colleague2 Colleague
+	Mediator
+	colleagues []IColleague
 }
-func (m *ConcreteMediator) Send(message string, colleague Colleague) string {
-	if colleague == m.Colleague1 {
-		return m.Colleague2.Notify(message)
+
+func (m *ConcreteMediator) AddColleague(c IColleague) {
+	if m == nil {
+		return
 	}
-	return m.Colleague1.Notify(message)
+	m.colleagues = append(m.colleagues, c)
 }
 
-type ConcreteColleague1 struct {
-	mediator Mediator
+func (m *ConcreteMediator) Send(message string, c IColleague) {
+	if m == nil {
+		return
+	}
+	for _, val := range m.colleagues {
+		if c == val {
+			continue
+		}
+		val.Notify(message)
+	}
 }
-func NewConcreteColleague1(mediator Mediator) *ConcreteColleague1 { return &ConcreteColleague1{mediator: mediator} }
-func (c *ConcreteColleague1) Send(message string) string { return c.mediator.Send(message, c) }
-func (c *ConcreteColleague1) Notify(message string) string { return "同事1得到信息:" + message }
 
-type ConcreteColleague2 struct {
-	mediator Mediator
+func NewConcreteMediator() *ConcreteMediator {
+	return &ConcreteMediator{}
 }
-func NewConcreteColleague2(mediator Mediator) *ConcreteColleague2 { return &ConcreteColleague2{mediator: mediator} }
-func (c *ConcreteColleague2) Send(message string) string { return c.mediator.Send(message, c) }
-func (c *ConcreteColleague2) Notify(message string) string { return "同事2得到信息:" + message }
+
+// 合作者接口
+type IColleague interface {
+	Send(string)
+	Notify(string)
+}
+
+// 实现合作者接口的基本类型
+type Colleague struct {
+	mediator IMediator
+}
+
+// 具体合作者对象A
+type ConcreteColleageA struct {
+	Colleague
+}
+
+func (c *ConcreteColleageA) Notify(message string) {
+	if c == nil {
+		return
+	}
+	fmt.Println("ConcreteColleageA get message:", message)
+}
+
+func (c *ConcreteColleageA) Send(message string) {
+	if c == nil {
+		return
+	}
+	c.mediator.Send(message, c)
+
+}
+func NewConcreteColleageA(mediator IMediator) *ConcreteColleageA {
+	return &ConcreteColleageA{Colleague{mediator}}
+}
+
+// 具体合作者对象B
+type ConcreteColleageB struct {
+	Colleague
+}
+
+func (c *ConcreteColleageB) Notify(message string) {
+	if c == nil {
+		return
+	}
+	fmt.Println("ConcreteColleageB get message:", message)
+}
+func (c *ConcreteColleageB) Send(message string) {
+	if c == nil {
+		return
+	}
+	c.mediator.Send(message, c)
+
+}
+func NewConcreteColleageB(mediator IMediator) *ConcreteColleageB {
+	return &ConcreteColleageB{Colleague{mediator}}
+}

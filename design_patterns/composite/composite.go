@@ -1,33 +1,128 @@
-package composite
-import "strings"
+/*
+  Composite 组合模式：
+        将对象组合成树形结构，以表示“部分-整体”的层次结构。
+		组合模式使得用户对单个对象和组合对象的使用具有一致性
+ 个人想法：
+ 日期：   20170308
+*/
 
-type Component interface {
-	Add(c Component)
-	Remove(c Component)
-	Display(depth int) string
+package composite
+
+import (
+	"fmt"
+	"strings"
+)
+
+// 公司管理接口
+type Company interface {
+	add(Company)
+	remove(Company)
+	display(int)
+	lineOfDuty()
 }
 
-type Leaf struct {
+type RealCompany struct {
 	name string
 }
-func NewLeaf(name string) *Leaf { return &Leaf{name: name} }
-func (l *Leaf) Add(c Component) {}
-func (l *Leaf) Remove(c Component) {}
-func (l *Leaf) Display(depth int) string {
-	return strings.Repeat("-", depth) + l.name
+
+// 具体公司
+type ConcreateCompany struct {
+	RealCompany
+	list []Company
 }
 
-type Composite struct {
-	name     string
-	children []Component
+func NewConcreateCompany(name string) *ConcreateCompany {
+	return &ConcreateCompany{RealCompany{name}, []Company{}}
 }
-func NewComposite(name string) *Composite { return &Composite{name: name, children: make([]Component, 0)} }
-func (c *Composite) Add(comp Component) { c.children = append(c.children, comp) }
-func (c *Composite) Remove(comp Component) {}
-func (c *Composite) Display(depth int) string {
-	res := strings.Repeat("-", depth) + c.name
-	for _, child := range c.children {
-		res += "\n" + child.Display(depth+2)
+
+func (c *ConcreateCompany) add(newc Company) {
+	if c == nil {
+		return
 	}
-	return res
+	c.list = append(c.list, newc)
+}
+
+func (c *ConcreateCompany) remove(delc Company) {
+	if c == nil {
+		return
+	}
+	for i, val := range c.list {
+		if val == delc {
+			c.list = append(c.list[:i], c.list[i+1:]...)
+			return
+		}
+	}
+	return
+}
+
+func (c *ConcreateCompany) display(depth int) {
+	if c == nil {
+		return
+	}
+	fmt.Println(strings.Repeat("-", depth), " ", c.name)
+	for _, val := range c.list {
+		val.display(depth + 2)
+	}
+}
+
+func (c *ConcreateCompany) lineOfDuty() {
+	if c == nil {
+		return
+	}
+
+	for _, val := range c.list {
+		val.lineOfDuty()
+	}
+}
+
+// 人力资源部门
+type HRDepartment struct {
+	RealCompany
+}
+
+func NewHRDepartment(name string) *HRDepartment {
+	return &HRDepartment{RealCompany{name}}
+}
+
+func (h *HRDepartment) add(c Company)    {}
+func (h *HRDepartment) remove(c Company) {}
+
+func (h *HRDepartment) display(depth int) {
+	if h == nil {
+		return
+	}
+	fmt.Println(strings.Repeat("-", depth), " ", h.name)
+}
+
+func (h *HRDepartment) lineOfDuty() {
+	if h == nil {
+		return
+	}
+	fmt.Println(h.name, "员工招聘培训管理")
+}
+
+// 财务部门
+type FinanceDepartment struct {
+	RealCompany
+}
+
+func NewFinanceDepartment(name string) *FinanceDepartment {
+	return &FinanceDepartment{RealCompany{name}}
+}
+
+func (h *FinanceDepartment) add(c Company)    {}
+func (h *FinanceDepartment) remove(c Company) {}
+
+func (h *FinanceDepartment) display(depth int) {
+	if h == nil {
+		return
+	}
+	fmt.Println(strings.Repeat("-", depth), " ", h.name)
+}
+
+func (h *FinanceDepartment) lineOfDuty() {
+	if h == nil {
+		return
+	}
+	fmt.Println(h.name, "公司财务收支管理")
 }

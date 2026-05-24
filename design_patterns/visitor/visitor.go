@@ -1,38 +1,134 @@
+/*
+ Visitor 访问者模式：
+        表示一个作用于某对象结构中的各元素的操作，
+		它使你可以在不改变各元素的类的前提下定义作用于这些元素的新操作
+ 个人想法：
+*/
+
 package visitor
 
-type Visitor interface {
-	VisitConcreteElementA(a *ConcreteElementA) string
-	VisitConcreteElementB(b *ConcreteElementB) string
+import (
+	"fmt"
+)
+
+// 访问接口
+type IVisitor interface {
+	VisitConcreteElementA(ConcreteElementA)
+	VisitConcreteElementB(ConcreteElementB)
 }
 
-type Element interface {
-	Accept(visitor Visitor) string
+// 具体访问者A
+type ConcreteVisitorA struct {
+	name string
 }
 
-type ConcreteElementA struct{}
-func (c *ConcreteElementA) Accept(visitor Visitor) string { return visitor.VisitConcreteElementA(c) }
-func (c *ConcreteElementA) OperationA() string { return "具体元素A的操作" }
-
-type ConcreteElementB struct{}
-func (c *ConcreteElementB) Accept(visitor Visitor) string { return visitor.VisitConcreteElementB(c) }
-func (c *ConcreteElementB) OperationB() string { return "具体元素B的操作" }
-
-type ConcreteVisitor1 struct{}
-func (c *ConcreteVisitor1) VisitConcreteElementA(a *ConcreteElementA) string {
-	return "访问者1 访问了 " + a.OperationA()
-}
-func (c *ConcreteVisitor1) VisitConcreteElementB(b *ConcreteElementB) string {
-	return "访问者1 访问了 " + b.OperationB()
-}
-
-type ObjectStructure struct {
-	elements []Element
-}
-func (o *ObjectStructure) Attach(element Element) { o.elements = append(o.elements, element) }
-func (o *ObjectStructure) Accept(visitor Visitor) string {
-	res := ""
-	for _, val := range o.elements {
-		res += val.Accept(visitor) + "\n"
+func (c *ConcreteVisitorA) VisitConcreteElementA(ce ConcreteElementA) {
+	if c == nil {
+		return
 	}
-	return res
+	fmt.Println(ce.name, c.name)
+	ce.OperatorA()
+}
+
+func (c *ConcreteVisitorA) VisitConcreteElementB(ce ConcreteElementB) {
+	if c == nil {
+		return
+	}
+	fmt.Println(ce.name, c.name)
+	ce.OperatorB()
+}
+
+// 具体访问者B
+type ConcreteVisitorB struct {
+	name string
+}
+
+func (c *ConcreteVisitorB) VisitConcreteElementA(ce ConcreteElementA) {
+	if c == nil {
+		return
+	}
+	fmt.Println(ce.name, c.name)
+	ce.OperatorA()
+}
+
+func (c *ConcreteVisitorB) VisitConcreteElementB(ce ConcreteElementB) {
+	if c == nil {
+		return
+	}
+	fmt.Println(ce.name, c.name)
+	ce.OperatorB()
+}
+
+// 元素接口
+type IElement interface {
+	Accept(IVisitor)
+}
+
+// 具体元素A
+type ConcreteElementA struct {
+	name string
+}
+
+func (c *ConcreteElementA) Accept(visitor IVisitor) {
+	if c == nil {
+		return
+	}
+	visitor.VisitConcreteElementA(*c)
+}
+func (c *ConcreteElementA) OperatorA() {
+	if c == nil {
+		return
+	}
+	fmt.Println("OperatorA")
+}
+
+// 具体元素B
+type ConcreteElementB struct {
+	name string
+}
+
+func (c *ConcreteElementB) Accept(visitor IVisitor) {
+	if c == nil {
+		return
+	}
+	visitor.VisitConcreteElementB(*c)
+}
+func (c *ConcreteElementB) OperatorB() {
+	if c == nil {
+		return
+	}
+	fmt.Println("OperatorB")
+}
+
+// 维护元素集合
+type ObjectStructure struct {
+	list []IElement
+}
+
+func (o *ObjectStructure) Attach(e IElement) {
+	if o == nil || e == nil {
+		return
+	}
+	o.list = append(o.list, e)
+}
+
+func (o *ObjectStructure) Detach(e IElement) {
+	if o == nil || e == nil {
+		return
+	}
+	for i, val := range o.list {
+		if val == e {
+			o.list = append(o.list[:i], o.list[i+1:]...)
+			break
+		}
+	}
+}
+
+func (o *ObjectStructure) Accept(v IVisitor) {
+	if o == nil {
+		return
+	}
+	for _, val := range o.list {
+		val.Accept(v)
+	}
 }

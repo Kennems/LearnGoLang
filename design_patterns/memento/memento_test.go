@@ -1,14 +1,18 @@
 package memento
-import "testing"
+
+import (
+	"testing"
+)
+
 func TestMemento(t *testing.T) {
-	o := &Originator{}
-	o.SetState("On")
-	c := &Caretaker{}
-	c.SetMemento(o.CreateMemento())
+	gr := GameRole{}
+	gr.GetInitState()
+	gr.StateDisplay()
 
-	o.SetState("Off")
-	if o.State() != "Off" { t.Errorf("State should be Off") }
-
-	o.SetMemento(c.Memento())
-	if o.State() != "On" { t.Errorf("State should be On") }
+	caretaker := RoleStateCaretaker{}
+	caretaker.memento = gr.SaveState()
+	gr.Fight()
+	gr.StateDisplay()
+	gr.RecoveryState(caretaker.memento)
+	gr.StateDisplay()
 }

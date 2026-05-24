@@ -1,32 +1,82 @@
+/*
+  Bridge 桥接模式：
+        将抽象部分与它的实现部分分离，使它们都可以独立地变化
+ 个人想法：组合/聚合复用原则
+ 日期：   20170306
+*/
+
 package bridge
 
-type Software interface {
-	Run() string
+import (
+	"fmt"
+)
+
+type Phone struct {
+	soft ISoftware
+	name string
 }
 
-type SoftwareA struct{}
-func (s *SoftwareA) Run() string { return "run soft a" }
+func (p *Phone) setSoft(soft ISoftware) {
+	if p == nil {
+		return
+	}
+	p.soft = soft
+}
 
-type SoftwareB struct{}
-func (s *SoftwareB) Run() string { return "run soft b" }
-
-type Phone interface {
-	SetSoft(software Software)
-	Run() string
+func (p *Phone) Run() {
+	if p == nil {
+		return
+	}
+	fmt.Println(p.name)
+	p.soft.Run()
 }
 
 type PhoneA struct {
-	soft Software
-	name string
+	Phone
 }
-func NewPhoneA(name string) *PhoneA { return &PhoneA{name: name} }
-func (p *PhoneA) SetSoft(software Software) { p.soft = software }
-func (p *PhoneA) Run() string { return "PhoneA " + p.name + " run: " + p.soft.Run() }
+
+func NewPhoneA(name string) *PhoneA {
+	return &PhoneA{Phone{name: name}}
+}
 
 type PhoneB struct {
-	soft Software
+	Phone
+}
+
+func NewPhoneB(name string) *PhoneB {
+	return &PhoneB{Phone{name: name}}
+}
+
+type ISoftware interface {
+	Run()
+}
+
+type TSoftware struct {
+	ISoftware
+}
+
+type Software struct {
 	name string
 }
-func NewPhoneB(name string) *PhoneB { return &PhoneB{name: name} }
-func (p *PhoneB) SetSoft(software Software) { p.soft = software }
-func (p *PhoneB) Run() string { return "PhoneB " + p.name + " run: " + p.soft.Run() }
+
+type SoftwareA struct {
+	Software
+}
+
+func (s *Software) Run() {
+	if s == nil {
+		return
+	}
+	fmt.Println(s.name)
+}
+
+type SoftwareB struct {
+	Software
+}
+
+/*func (s *SoftwareB) Run() {
+	if s == nil {
+		return
+	}
+	fmt.Println(s.name)
+}*/

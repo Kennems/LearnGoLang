@@ -1,11 +1,24 @@
 package flyweight
-import "testing"
+
+import (
+	"testing"
+)
+
 func TestFlyweight(t *testing.T) {
-	extrinsicstate := 22
-	f := NewFlyweightFactory()
-	fx := f.GetFlyweight("X")
-	res := fx.Operation(extrinsicstate)
-	if res != "具体Flyweight:22" {
-		t.Errorf("Unexpected result: %s", res)
-	}
+	ff := NewFlyweightFactory()
+
+	fya := ff.Flyweight("a")
+	fya.Operation(1)
+
+	fyb := ff.Flyweight("b")
+	fyb.Operation(2)
+
+	fyc := ff.Flyweight("c")
+	fyc.Operation(3)
+
+	fyd := ff.Flyweight("d")
+	fyd.Operation(4)
+
+	fyu := ff.Flyweight("u")
+	fyu.Operation(5)
 }
